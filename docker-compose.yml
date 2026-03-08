@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  backend:
+    build: .
+    container_name: portfolio
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL: ${DB_URL}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      GEMINI_MODEL: ${GEMINI_MODEL}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    restart: always
