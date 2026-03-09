@@ -20,6 +20,9 @@ import java.util.ArrayList;
 @Service
 public class GeminiService {
 
+    @Autowired
+    private ContextoCacheService contextoCacheService;
+
     @Value("${GEMINI_API_KEY}")
     private String apiKey;
 
@@ -48,7 +51,7 @@ public class GeminiService {
             generationConfig.put("temperature", 0.05);  // Mais baixo = mais determinístico
             generationConfig.put("topP", 0.95);         // Mais alto = mais rápido
             generationConfig.put("topK", 10);           // Limita opções (mais rápido)
-            generationConfig.put("maxOutputTokens", 300); // REDUZIDO - mais rápido e conciso
+            generationConfig.put("maxOutputTokens", 200); // REDUZIDO - mais rápido e conciso
             generationConfig.put("stopSequences", new String[]{"PERGUNTA:", "---"}); // Para quando terminar
             requestBody.put("generationConfig", generationConfig);
 
@@ -84,6 +87,9 @@ public class GeminiService {
 
     private String construirPromptOtimizado(String mensagem) {
         StringBuilder prompt = new StringBuilder();
+
+        // Obtém contexto do banco de dados via cache
+        String contextoDB = contextoCacheService.obterContextoCompleto();
 
         String sobreMim = """
         VOCÊ É O ASSISTENTE DO RICHARD MORAES SOUZA. AQUI ESTÃO OS DADOS DELE:
@@ -122,6 +128,9 @@ public class GeminiService {
 
         prompt.append("Você é o assistente virtual do Richard Moraes Souza.\n");
         prompt.append("Sua missão é responder perguntas usando as fontes abaixo:\n\n");
+
+        prompt.append("FONTE 1 - BANCO DE DADOS:\n");
+        prompt.append(contextoDB).append("\n\n");
 
         prompt.append("\nFONTE 2 - CONHECIMENTO GERAL SOBRE O RICHARD:\n");
         prompt.append(sobreMim).append("\n\n");

@@ -462,5 +462,5 @@ Para suporte e dúvidas:
 
 ---
 
-**Última atualização:** Março 2026  
+**Última atualização:** Março 2026
 **Status:** ✅ Em desenvolvimento ativo
